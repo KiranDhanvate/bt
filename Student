@@ -29,3 +29,182 @@ contract StudentDB {
         return students.length;
     }
 }
+
+
+
+
+
+
+✅ Solidity Program: Student Data Using Structure, Array & Fallback
+
+Create a new file in Remix called:
+
+StudentData.sol
+
+
+Paste this code:
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract StudentData {
+
+    // ✅ Structure to store student data
+    struct Student {
+        uint256 roll;
+        string name;
+        uint256 marks;
+    }
+
+    // ✅ Array to store multiple students
+    Student[] public students;
+
+    // ✅ Function to add a new student
+    function addStudent(uint256 _roll, string memory _name, uint256 _marks) public {
+        students.push(Student(_roll, _name, _marks));
+    }
+
+    // ✅ Function to get student details by index
+    function getStudent(uint256 index) public view returns (uint256, string memory, uint256) {
+        require(index < students.length, "Invalid index");
+        Student memory s = students[index];
+        return (s.roll, s.name, s.marks);
+    }
+
+    // ✅ Fallback function (executes when calling non-existing function)
+    fallback() external payable {
+        // If someone sends Ether or calls unknown function, add a dummy student
+        students.push(Student(0, "Fallback Student", 0));
+    }
+
+    // ✅ Receive function (executes when Ether is sent without data)
+    receive() external payable {
+        // Just accept ETH
+    }
+}
+
+✅ Explanation of Required Constructs
+✅ 1. Structure
+
+Used to store student info:
+
+struct Student {
+    uint256 roll;
+    string name;
+    uint256 marks;
+}
+
+✅ 2. Array
+
+Stores multiple students:
+
+Student[] public students;
+
+✅ 3. Fallback Function
+
+Triggered when:
+
+You call a non-existent function
+
+You send ETH with wrong data
+
+fallback() external payable {
+    students.push(Student(0, "Fallback Student", 0));
+}
+
+
+This adds a dummy student automatically.
+
+✅ Step-by-Step Deployment Guide (with Remix)
+✅ Step 1: Open Remix
+
+Go to: https://remix.ethereum.org/
+
+✅ Step 2: Create File
+
+Left sidebar → File Explorer
+
+Click New File
+
+Name it:
+
+StudentData.sol
+
+
+Paste the full code.
+
+✅ Step 3: Compile
+
+Click the Solidity Compiler icon
+
+Select version 0.8.0 or above
+
+Click Compile StudentData.sol
+
+You should see Compilation Successful ✅
+
+✅ Step 4: Deploy
+
+Click Deploy & Run Transactions
+
+Environment → Remix VM (Prague) (for offline testing)
+
+Click Deploy
+
+Contract will appear under Deployed Contracts
+
+✅ Testing the Program
+✅ 1. Add Students
+
+Use:
+
+addStudent(uint roll, string name, uint marks)
+
+
+Example:
+
+addStudent(1, "Kiran", 90)
+addStudent(2, "Asha", 85)
+
+✅ 2. View Student
+
+Use:
+
+getStudent(index)
+
+
+Example:
+
+getStudent(0)
+
+
+Output:
+
+1, "Kiran", 90
+
+✅ 3. Test Fallback
+
+To activate fallback:
+
+In Remix → In the low-level interactions section
+
+Put any value in "calldata" field like:
+
+0x1234
+
+
+Click Transact
+
+A dummy student is added:
+
+roll = 0
+name = "Fallback Student"
+marks = 0
+
+✅ 4. Test receiving ETH
+
+Leave calldata empty
+
+Add value (like 1 wei)
+
+Click Transact
