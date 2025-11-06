@@ -36,3 +36,199 @@ contract BankAccount {
         return balance;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+✅ 1. INSTALL & SETUP
+✅ Step 1 — Install MetaMask
+
+Go to: https://metamask.io/
+
+Install the Chrome/Edge/Brave extension.
+
+Create a new wallet.
+
+Save your Secret Recovery Phrase.
+
+✅ Step 2 — Enable Sepolia Test Network
+
+Open MetaMask → Profile icon → Settings
+
+Go to Advanced
+
+Turn ON Show test networks
+
+Click the network dropdown
+
+Select Sepolia Test Network
+
+✅ Step 3 — Get Free Sepolia ETH
+
+Use a faucet:
+🔗 https://sepoliafaucet.com/
+
+Copy your MetaMask address
+
+Paste it into the faucet
+
+Click Send me ETH
+
+Wait for 1–2 minutes → Your wallet will show 0.1 to 1 Sepolia ETH.
+
+✅ 2. WRITE THE SMART CONTRACT
+✅ Step 4 — Open Remix IDE
+
+Go to: https://remix.ethereum.org
+
+✅ Step 5 — Create a New Solidity File
+
+In Remix left sidebar → click File icon
+
+Click New File → name it:
+
+SimpleBank.sol
+
+
+Paste this code:
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SimpleBank {
+
+    mapping(address => uint256) private balances;
+
+    event Deposited(address indexed user, uint256 amount);
+    event Withdrawn(address indexed user, uint256 amount);
+
+    // Deposit money
+    function deposit() public payable {
+        require(msg.value > 0, "Deposit must be greater than 0");
+        balances[msg.sender] += msg.value;
+        emit Deposited(msg.sender, msg.value);
+    }
+
+    // Withdraw money
+    function withdraw(uint256 amount) public {
+        require(amount > 0, "Amount must be > 0");
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+
+        balances[msg.sender] -= amount;
+        payable(msg.sender).transfer(amount);
+
+        emit Withdrawn(msg.sender, amount);
+    }
+
+    // Show balance
+    function getBalance() public view returns (uint256) {
+        return balances[msg.sender];
+    }
+}
+
+
+✅ This contract supports:
+✔ deposit()
+✔ withdraw()
+✔ getBalance()
+
+✅ 3. COMPILE THE CONTRACT
+✅ Step 6 — Compile
+
+Click Solidity Compiler (left sidebar)
+
+Select compiler version 0.8.0
+
+Click Compile SimpleBank.sol
+
+You should see ✅ — Compilation successful
+
+✅ 4. DEPLOY ON SEPOLIA TEST NETWORK
+✅ Step 7 — Connect Remix to MetaMask
+
+Click Deploy & Run Transactions
+
+In “Environment” dropdown → choose:
+
+Injected Provider – MetaMask
+
+
+MetaMask will pop up → Click Connect
+
+Now your account will appear under “Account”.
+
+Example:
+
+0x1234...abcd (0.05 ETH)
+
+✅ Step 8 — Deploy the Contract
+
+Make sure VALUE = 0
+
+Select contract: SimpleBank – SimpleBank.sol
+
+Click Deploy
+
+MetaMask opens → click Confirm
+
+Contract is now deployed on the Sepolia blockchain ✅
+
+You will see:
+
+Deployed Contracts
+   SimpleBank at 0xABC123...
+
+✅ 5. TEST THE OPERATIONS
+✅ Step 9 — Deposit Money
+
+In VALUE box:
+
+Change “Wei” → ether
+
+Enter:
+
+0.01
+
+
+Click deposit()
+
+MetaMask → Confirm
+
+✅ 0.01 ETH is deposited into your smart contract account
+
+✅ Step 10 — Show Balance
+
+Click getBalance()
+
+You should see something like:
+
+10000000000000000
+
+
+(That's 0.01 ETH in wei)
+
+✅ Step 11 — Withdraw Money
+
+In the withdraw input box, enter the SAME deposit amount in wei:
+
+10000000000000000
+
+
+Click withdraw
+
+MetaMask → Confirm
+
+✅ ETH sent back to your wallet
+✅ Contract balance updates
